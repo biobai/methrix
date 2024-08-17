@@ -37,7 +37,7 @@
 #' @rawNamespace import(data.table, except = c(shift, first, second))
 #' @import parallel
 #' @import DelayedMatrixStats
-#' @import SummarizedExperiment DelayedArray HDF5Array
+#' @import tidySummarizedExperiment SummarizedExperiment DelayedArray HDF5Array
 #' @examples
 #'\dontrun{
 #'bdg_files = list.files(path = system.file('extdata', package = 'methrix'),

@@ -152,7 +152,50 @@ parse_source_idx = function(chr = NULL, start = NULL, end = NULL, strand = NULL,
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-# Read bedgraphs, and add missing info
+#' Reads and processes a bedgraph file.
+#'
+#' This function reads a bedgraph file, performs various processing steps
+#' (including handling missing CpGs and strand information), and returns a 
+#' data.table object containing processed methylation data.
+#'
+#' @param bdg The path to the bedgraph file.
+#' @param col_list A list containing information about columns in the 
+#'   bedgraph file. See details for more information.
+#' @param genome A data.table object containing reference CpG information.
+#' @param verbose A logical value indicating whether to print informative 
+#'   messages during processing (default: TRUE).
+#' @param strand_collapse A logical value indicating whether to collapse 
+#'   methylation data from both strands (default: FALSE). This option requires 
+#'   "M" and "U" columns to be present.
+#' @param fill_cpgs A logical value indicating whether to fill missing CpGs 
+#'   from the reference with NAs (default: TRUE).
+#' @param ... Additional arguments to be passed to `data.table::fread`.
+#'
+#' @details
+#' The `col_list` argument should be a list with the following elements:
+#'
+#' * `select`: A logical vector indicating which columns to select from the 
+#'   bedgraph file (optional).
+#' * `col_idx`: An integer vector specifying the column indices to select 
+#'   (alternative to `select`).
+#' * `col_names`: A character vector specifying the desired column names 
+#'   (optional).
+#' * `col_classes`: A character vector specifying the desired column classes 
+#'   (optional).
+#' * `fix_missing`: A character vector containing R expressions to fix missing 
+#'   values in specific columns.
+#'
+#' @return A list containing the following elements:
+#'
+#' * `bdg`: A data.table object containing the processed bedgraph data.
+#' * `genome_stat`: A data.table object containing summary statistics for the 
+#'   entire dataset (mean and median methylation, coverage).
+#' * `chr_stat`: A data.table object containing summary statistics for each 
+#'   chromosome (mean and median methylation, coverage).
+#' * `ncpg`: A data.table object containing the number of CpGs for each 
+#'   chromosome.
+#'
+#' @export
 read_bdg = function(bdg, col_list = NULL, genome = NULL, verbose = TRUE,
                     strand_collapse = FALSE, fill_cpgs = TRUE,
                     contigs = contigs, synced_coordinates = synced_coordinates,
